@@ -32,6 +32,10 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+)
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',

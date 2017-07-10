@@ -18,13 +18,22 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-# 专门用来处理静态文件
+# TemplateView：专门用来处理静态文件,不需要专门写一个view来映射.
 from django.views.generic import TemplateView
 import xadmin
+
+from users.views import user_login
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^$', TemplateView.as_view(template_name="index.html"), name="index"),
-    url(r'^login/$', TemplateView.as_view(template_name="login.html"), name="login"),
-
+    # url(r'^login/$', TemplateView.as_view(template_name="login.html"), name="login"),
+    url(r'^login/$', user_login, name="login"),
 ]
+
+'''
+user_login和user_login()区别：
+user_login代表指向这个函数
+user_login()代表调用这个函数
+'''
+
