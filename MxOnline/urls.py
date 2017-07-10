@@ -22,18 +22,20 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 import xadmin
 
-from users.views import user_login
+from users.views import LoginView
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^$', TemplateView.as_view(template_name="index.html"), name="index"),
     # url(r'^login/$', TemplateView.as_view(template_name="login.html"), name="login"),
-    url(r'^login/$', user_login, name="login"),
+    # url(r'^login/$', user_login, name="login"),
+    url(r'^login/$', LoginView.as_view(), name="login")
 ]
 
 '''
 user_login和user_login()区别：
 user_login代表指向这个函数
 user_login()代表调用这个函数
+LoginView.as_view():把LoginView类转换为一个as_view,返回一个函数句柄,此处要调用用方法，所以要()。
 '''
 
