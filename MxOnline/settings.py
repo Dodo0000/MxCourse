@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'operation',
     'xadmin',
     'crispy_forms',
+    'captcha',
 ]
 
 # 重写用户模型
@@ -148,3 +149,11 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.qq.com"
+EMAIL_PORT = 25
+EMAIL_HOST_USER = "*******@qq.com"
+EMAIL_HOST_PASSWORD = "******"
+EMAIL_USE_TLS =True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
