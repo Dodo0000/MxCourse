@@ -47,7 +47,7 @@ def send_register_email(email,send_type="register"):
     email_body = ""
     if send_type == "register":
         email_title = "注册激活"
-        email_body = "请点击激活：http://127.0.0.1:8000/actice/{0}".format(code)
+        email_body = "请点击激活：http://127.0.0.1:8000/active/{0}".format(code)
 
         send_status = send_mail(email_title, email_body, DEFAULT_FROM_EMAIL, [email])
         if send_status:

@@ -22,7 +22,7 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 import xadmin
 
-from users.views import LoginView,RegisterView
+from users.views import LoginView,RegisterView,ActiveUserView
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^login/$', LoginView.as_view(), name="login"),
     url(r'^register/$', RegisterView.as_view(), name="register"),
     url(r'^captcha/', include('captcha.urls')),
+    url(r'^active/(?P<active_code>.*)/$', ActiveUserView.as_view(), name="user_active"),
 ]
 
 '''
@@ -39,5 +40,7 @@ user_login和user_login()区别：
 user_login代表指向这个函数
 user_login()代表调用这个函数
 LoginView.as_view():把LoginView类转换为一个as_view,返回一个函数句柄,此处要调用用方法，所以要()。
+(?P):提取一个变量当做参数
+(?P<active_code>.*):正则表达式.*匹配到的内容填充到<active_code>中
 '''
 
