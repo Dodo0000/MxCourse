@@ -83,6 +83,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 处理静态问题件
+                'django.core.context_processors.media',
             ],
         },
     },
@@ -157,3 +159,7 @@ EMAIL_HOST_USER = "****@qq.com"
 EMAIL_HOST_PASSWORD = "****"
 EMAIL_USE_TLS =True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

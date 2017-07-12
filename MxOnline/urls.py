@@ -21,8 +21,12 @@ from django.contrib import admin
 # TemplateView：专门用来处理静态文件,不需要专门写一个view来映射.
 from django.views.generic import TemplateView
 import xadmin
+# django处理静态文件内容
+from django.views.static import serve
 
 from users.views import LoginView, RegisterView, ActiveUserView, ForgetPwdView, RestView, ModifyPwdView
+from organization.views import OrgView
+from MxOnline.settings import MEDIA_ROOT
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
@@ -36,6 +40,13 @@ urlpatterns = [
     url(r'^forget/$', ForgetPwdView.as_view(), name="forget_pwd"),
     url(r'^reset/(?P<reset_code>.*)/$', RestView.as_view(), name="reset_pwd"),
     url(r'^modify_pwd/$', ModifyPwdView.as_view(), name="modify_pwd"),
+
+    # 课程机构首页
+    url(r'^org_list/$',OrgView.as_view(), name="org_list"),
+
+    # media的url配置，图片上传的url路径
+    url(r'media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT})
+
 ]
 
 '''
