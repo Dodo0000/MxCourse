@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.views.generic import View
 from .models import CourseOrg,CityDict
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
+from django.http import HttpResponse
+from forms import UserAskForm
 # Create your views here.
 
 
@@ -51,4 +53,17 @@ class OrgView(View):
                        "city_id": city_id,
                        "catgory": catgory,
                        "hot_orgs": hot_orgs,
+
                        "sort": sort})
+
+
+# modelform无需取出一个个值，而是直接通过request.POST获取内容后
+# 直接save保存
+class AddUserAskView(View):
+    def post(self, request):
+        userask_form = UserAskForm(request.POST)
+        if userask_form.is_valid():
+            user_ask = userask_form.save(commit=True)
+            return HttpResponse('{"status":"success"}', content_type='application/json')
+        else:
+            return HttpResponse('{"status": "fail", "msg":"添加出错"}', content_type="application/json")

@@ -41,8 +41,10 @@ urlpatterns = [
     url(r'^reset/(?P<reset_code>.*)/$', RestView.as_view(), name="reset_pwd"),
     url(r'^modify_pwd/$', ModifyPwdView.as_view(), name="modify_pwd"),
 
-    # 课程机构首页
-    url(r'^org_list/$',OrgView.as_view(), name="org_list"),
+    # 课程机构URL配置
+    url(r'^org/', include('organization.urls', namespace="org")),
+
+
 
     # media的url配置，图片上传的url路径
     url(r'media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT})
