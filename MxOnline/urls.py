@@ -44,6 +44,8 @@ urlpatterns = [
     # 课程机构URL配置
     url(r'^org/', include('organization.urls', namespace="org")),
 
+    # 课程列表
+    url(r'^course/', include('courses.urls', namespace="course")),
 
 
     # media的url配置，图片上传的url路径

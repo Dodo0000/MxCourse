@@ -28,6 +28,7 @@ class OrgView(View):
         if catgory:
             all_orgs = all_orgs.filter(catgory=catgory)
 
+        # 排序
         sort = request.GET.get("sort", "")
         if sort:
             if sort == "students":
