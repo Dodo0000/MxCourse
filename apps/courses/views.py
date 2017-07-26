@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from django.http import HttpResponse
 from .models import Course, CourseResource
-from  operation.models import UserFavorite,CourseComments
+from  operation.models import UserFavorite,CourseComments, UserCourse
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
+from utils.mixin_utils import LoginRequireMixin
 
 
 # Create your views here.
@@ -50,17 +51,34 @@ class CourseDetailView(View):
             "course": course,
         })
 
-class CourseInfoView(View):
+class CourseInfoView(LoginRequireMixin, View):
     def get(self, request, course_id):
         course = Course.objects.get(id=int(course_id))
+
+        # 查询用户是否已关联课程
+        user_courses = UserCourse.objects.filter(user=request.user,course=course)
+        if not user_courses:
+            user_course = UserCourse(user=request.user, course=course)
+            user_course.save()
+
         all_resources = CourseResource.objects.filter(course=course)
+        user_courses = UserCourse.objects.filter(course=course)
+        user_ids = [user_course.user.id for user_course in user_courses]
+        all_user_courses = UserCourse.objects.filter(user_id__in=user_ids)
+        """
+        user_id__in
+        django的用法，获取一个列表内容
+        """
+        course_ids = [user_course.course.id for user_course in user_courses]
+        relate_courses = Course.objects.filter(id__in=course_ids).order_by('-click_nums')[:3]
 
         return render(request, "course-video.html", {
             "course": course,
             "course_resources": all_resources,
+            "relate_courses": relate_courses,
         })
 
-class CommentsView(View):
+class CommentsView(LoginRequireMixin, View):
     def get(self, request, course_id):
         course = Course.objects.get(id=int(course_id))
         all_resources = CourseResource.objects.filter(course=course)
@@ -69,6 +87,8 @@ class CommentsView(View):
             "course": course,
             "course_resources": all_resources,
             "all_comments": all_comments,
+
+
         })
 
 class AddCommentsView(View):
