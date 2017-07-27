@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.http import HttpResponse
+from django.db.models import Q
 from .models import Course, CourseResource
 from  operation.models import UserFavorite,CourseComments, UserCourse
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
@@ -15,6 +16,13 @@ class CourseListView(View):
         all_courses = Course.objects.all().order_by("-add_time")
 
         hot_courses = Course.objects.all().order_by("-click_nums")[:3]
+
+        # 关键词搜索功能
+        search_keywords = request.GET.get("keywords", "")
+        if search_keywords:
+            all_courses = all_courses.filter(Q(name__icontains=search_keywords)|Q(desc__icontains=search_keywords)|Q(detail__icontains=search_keywords))
+            # name__icontains django会把name转换为like语句
+            # django的model中，出现了i，则不区分大小写
 
         # 课程排序
         sort = request.GET.get("sort", "")

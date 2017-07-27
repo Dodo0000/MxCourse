@@ -1,6 +1,7 @@
 # coding:utf-8
 from django.shortcuts import render
 from django.views.generic import View
+from django.db.models import Q
 from .models import CourseOrg,CityDict, Teacher
 from operation.models import UserFavorite
 from courses.models import Course
@@ -8,6 +9,7 @@ from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
 from django.http import HttpResponse
 from forms import UserAskForm
+
 # Create your views here.
 
 
@@ -30,6 +32,14 @@ class OrgView(View):
         if catgory:
             all_orgs = all_orgs.filter(catgory=catgory)
 
+        # 关键词搜索功能
+        search_keywords = request.GET.get("keywords", "")
+        if search_keywords:
+            all_orgs = all_orgs.filter(
+                Q(name__icontains=search_keywords) | Q(desc__icontains=search_keywords))
+            # name__icontains django会把name转换为like语句
+            # django的model中，出现了i，则不区分大小写
+
         # 排序
         sort = request.GET.get("sort", "")
         if sort:
@@ -47,7 +57,7 @@ class OrgView(View):
             page = 1
         # Provide Paginator with the request object for complete querystring generation
 
-        p = Paginator(all_orgs, 1, request=request)
+        p = Paginator(all_orgs, 4, request=request)
         orgs = p.page(page)
 
         return render(request, "org-list.html",
@@ -196,6 +206,16 @@ class TeacherListView(View):
     def get(self, request):
         all_teachers = Teacher.objects.all()
 
+        current_nav = "teacher"
+
+        # 关键词搜索功能
+        search_keywords = request.GET.get("keywords", "")
+        if search_keywords:
+            all_teachers = all_teachers.filter(
+                Q(name__icontains=search_keywords)|Q(work_company__icontains=search_keywords))
+            # name__icontains django会把name转换为like语句
+            # django的model中，出现了i，则不区分大小写
+
         # 讲师排序
         sort = request.GET.get("sort", "")
         if sort:
@@ -218,6 +238,7 @@ class TeacherListView(View):
             "all_teachers": teachers,
             "sorted_teacher": sorted_teacher,
             "sort": sort,
+            "current_nav": current_nav,
 
         })
 
@@ -248,3 +269,5 @@ class TeacherDetailView(View):
             "has_org_faved": has_org_faved,
 
         })
+
+
