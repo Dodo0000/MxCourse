@@ -37,7 +37,10 @@ def random_str(randomlength=8):
 
 def send_register_email(email,send_type="register"):
     email_recod = EmailVerifyRecord()
-    code = random_str(16)
+    if send_type == "update_email":
+        code = random_str(4)
+    else:
+        code = random_str(16)
     email_recod.code = code
     email_recod.email = email
     email_recod.send_type = send_type
@@ -59,6 +62,15 @@ def send_register_email(email,send_type="register"):
         send_status = send_mail(email_title, email_body, DEFAULT_FROM_EMAIL, [email])
         if send_status:
             pass
+    elif send_type == "updata_email":
+        email_title == "邮箱修改验证码"
+        email_body = "你的邮箱验证码为：{0}".format(code)
+        send_status = send_mail(email_title, email_body, DEFAULT_FROM_EMAIL, [email])
+        if send_status:
+            pass
+
+
+
 
 
 
