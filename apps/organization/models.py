@@ -58,5 +58,12 @@ class Teacher(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_course_nums(self):
+        """
+        获取课程数
+        :return:
+        """
+        return  self.course_set.all().count()
+
 
 
