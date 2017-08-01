@@ -24,16 +24,17 @@ import xadmin
 # django处理静态文件内容
 from django.views.static import serve
 
-from users.views import LoginView, RegisterView, ActiveUserView, ForgetPwdView, RestView, ModifyPwdView
+from users.views import LoginView, RegisterView, ActiveUserView, ForgetPwdView, RestView, ModifyPwdView, LogoutView, IndexView
 from organization.views import OrgView
-from MxOnline.settings import MEDIA_ROOT
+from MxOnline.settings import MEDIA_ROOT, STATIC_ROOT
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
-    url(r'^$', TemplateView.as_view(template_name="index.html"), name="index"),
+    url(r'^$', IndexView.as_view(), name="index"),
     # url(r'^login/$', TemplateView.as_view(template_name="login.html"), name="login"),
     # url(r'^login/$', user_login, name="login"),
     url(r'^login/$', LoginView.as_view(), name="login"),
+    url(r'^logout/$', LogoutView.as_view(), name="logout"),
     url(r'^register/$', RegisterView.as_view(), name="register"),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^active/(?P<active_code>.*)/$', ActiveUserView.as_view(), name="user_active"),
@@ -51,9 +52,19 @@ urlpatterns = [
     url(r'^users/', include('users.urls', namespace="users")),
 
     # media的url配置，图片上传的url路径
-    url(r'media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT})
+    url(r'media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
+
+    # 当debug=False时，自行处理static内容
+    url(r'static/(?P<path>.*)$', serve, {"document_root": STATIC_ROOT})
 
 ]
+
+
+# 全局404
+handler404 = 'users.views.page_no_found'
+
+# 全局500
+handler500 = 'users.views.page_error'
 
 '''
 user_login和user_login()区别：

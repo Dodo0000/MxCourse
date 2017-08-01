@@ -39,7 +39,7 @@ class UserProfile(AbstractUser):
         """
         这个引入不能放在开头
         """
-        return UserMessage.objects.filter(user=self.id).count()
+        return UserMessage.objects.filter(user=self.id,has_read=False).count()
 
 
 class EmailVerifyRecord(models.Model):
